@@ -3,16 +3,27 @@ import random
 
 turtle.tracer(1, 0)
 
+
+
 SIZE_X = 800
 SIZE_Y = 500
-turtle.setup(SIZE_X, SIZE_Y)
+turtle.setup(SIZE_X + 100, SIZE_Y + 100)
+drawing = turtle.clone()
+drawing.hideturtle()
+drawing.penup()
+drawing.goto(400, 250)
+drawing.pendown()
+drawing.goto(-400, 250)
+drawing.goto(-400, -250)
+drawing.goto(400, -250)
+drawing.goto(400, 250)
 
 turtle.penup()
 
 SQUARE_SIZE = 20
 START_LENGTH = 5
 
-
+count = 0
 
 pos_list = []
 stamp_list = []
@@ -81,6 +92,9 @@ turtle.onkeypress(down, DOWN_ARROW)
 turtle.onkeypress(right, RIGHT_ARROW)
 turtle.listen()
 
+score = turtle.clone()
+score.goto(-350, 260)
+
 def make_food():
     global food_stamps, food_pos
     min_x = -int(SIZE_X/2.5/SQUARE_SIZE) + 1
@@ -90,13 +104,16 @@ def make_food():
 
     food_x = random.randint(min_x, max_x)*SQUARE_SIZE
     food_y = random.randint(min_y, max_y)*SQUARE_SIZE
-
-    food.goto(food_x, food_y)
-    new_food = food.stamp()
-    food_pos.append((food_x, food_y))
-    food_stamps.append(new_food)
+    if snake.pos() not in (food_x, food_y):
+        food.goto(food_x, food_y)
+        new_food = food.stamp()
+        food_pos.append((food_x, food_y))
+        food_stamps.append(new_food)
+    else:
+        make_food()
 
 def move_snake():
+    global count
     my_pos = snake.pos()
     x_pos = my_pos[0]
     y_pos = my_pos[1]
@@ -119,7 +136,6 @@ def move_snake():
     pos_list.append(my_pos)
     print(stamp_list)
 
-
     old_stamp = stamp_list.pop(0)
     snake.clearstamp(old_stamp)
     global food_stamps, food_pos
@@ -132,6 +148,9 @@ def move_snake():
         make_food()
         stamp_list.append(stamp_id)
         pos_list.append(stamp_id)
+        count += 1
+        score.clear()
+        score.write("score: " + str(count), font=("Arial", 18, "normal"))
     pos_list.pop(0)
 
     new_pos = snake.pos()
@@ -155,15 +174,18 @@ def move_snake():
 
 move_snake()
 
+fun = turtle.clone()
+fun.hideturtle()
+
+if count > 2:
+    fun.goto(0, 0)
+    fun.write('Good!', font =("Ariel", 18, "normal"))
 
 food = turtle.clone()
 food.shape("triangle")
 food.color("brown")
 food.hideturtle()
-food_pos = [(100, 100)]
 food_stamps = []
 
-for f in food_pos:
-    food.goto(f[0], f[1])
-    new_stamp = food.stamp()
-    food_stamps.append(new_stamp)
+make_food()
+
