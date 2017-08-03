@@ -3,10 +3,9 @@ import random
 
 turtle.tracer(1, 0)
 
-
-
 SIZE_X = 800
 SIZE_Y = 500
+
 turtle.setup(SIZE_X + 100, SIZE_Y + 100)
 drawing = turtle.clone()
 drawing.hideturtle()
@@ -17,6 +16,7 @@ drawing.goto(-400, 250)
 drawing.goto(-400, -250)
 drawing.goto(400, -250)
 drawing.goto(400, 250)
+drawing.penup()
 
 turtle.penup()
 
@@ -50,7 +50,7 @@ UP_ARROW = "Up"
 LEFT_ARROW = "Left"
 DOWN_ARROW = "Down"
 RIGHT_ARROW = "Right"
-TIME_STEP = 100
+TIME_STEP = 80
 SPACEBAR = "space"
 
 UP = 0
@@ -104,7 +104,7 @@ def make_food():
 
     food_x = random.randint(min_x, max_x)*SQUARE_SIZE
     food_y = random.randint(min_y, max_y)*SQUARE_SIZE
-    if snake.pos() not in (food_x, food_y):
+    if (food_x, food_y) not in pos_list:
         food.goto(food_x, food_y)
         new_food = food.stamp()
         food_pos.append((food_x, food_y))
@@ -153,6 +153,27 @@ def move_snake():
         score.write("score: " + str(count), font=("Arial", 18, "normal"))
     pos_list.pop(0)
 
+    if count > 49:
+        drawing.goto(210, 260)
+        drawing.write("Inconceivable!", font = ("Ariel", 18, "normal"))
+        turtle.bgcolor("AntiqueWhite4")
+    elif count > 39:
+        drawing.goto(85, 260)
+        drawing.write("Amazing!", font = ("Ariel", 18, "normal"))
+        turtle.bgcolor("AntiqueWhite3")
+    elif count > 29:
+        drawing.goto(-50, 260)
+        drawing.write("Excellent!", font = ("Ariel", 18, "normal"))
+        turtle.bgcolor("AntiqueWhite2")
+    elif count > 19:
+        drawing.goto(-140, 260)
+        drawing.write("Great!", font = ("Ariel", 18, "normal"))
+        turtle.bgcolor("AntiqueWhite")
+    elif count > 9:
+        drawing.goto(-230, 260)
+        drawing.write("Good!", font = ("Ariel", 18, "normal"))
+        turtle.bgcolor("AntiqueWhite1")
+    
     new_pos = snake.pos()
     new_x_pos = new_pos[0]
     new_y_pos = new_pos[1]
@@ -174,15 +195,8 @@ def move_snake():
 
 move_snake()
 
-fun = turtle.clone()
-fun.hideturtle()
-
-if count > 2:
-    fun.goto(0, 0)
-    fun.write('Good!', font =("Ariel", 18, "normal"))
-
 food = turtle.clone()
-food.shape("triangle")
+food.shape("circle")
 food.color("brown")
 food.hideturtle()
 food_stamps = []
