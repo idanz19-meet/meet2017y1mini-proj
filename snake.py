@@ -20,7 +20,7 @@ drawing.penup()
 
 turtle.penup()
 
-SQUARE_SIZE = 20
+SQUARE_SIZE = 5
 START_LENGTH = 5
 
 count = 0
